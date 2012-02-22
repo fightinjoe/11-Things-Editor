@@ -9,9 +9,12 @@
   <script src="codemirror/modes/css.js"></script>
   <script src="codemirror/modes/htmlmixed.js"></script>
 
+  <link rel="stylesheet" type="text/css" href="base.css" />
+
   <style type="text/css">
-    .CodeMirror {
-      width:50%;
+    textarea, .CodeMirror, iframe {
+      width:49.5%;
+      height:99%;
       float:left;
       border:1px solid Red;
     }
@@ -19,22 +22,95 @@
 </head>
 <body>
 
+  <iframe id="preview"></iframe>
   <textarea id="editor"></textarea>
-  <div id="output"></div>
-  <iframe id="iout"></iframe>
 
 </body>
 <script type="text/javascript">
 
-  var iout = document.getElementById('iout').contentDocument;
+  var preview = document.getElementById('preview').contentDocument;
 
-  function handleUpdate(s) { iout.clear(); iout.open(); if(s) iout.write(s.getValue()); iout.close(); }
+  function handleUpdate(s) {
+    preview.clear();
+    preview.open();
+    if(s) preview.write(s.getValue());
+    preview.close();
+  }
 
   var myCodeMirror = CodeMirror.fromTextArea( document.getElementById('editor'), {onUpdate : handleUpdate} );
 
-  // var myCodeMirror = CodeMirror(document.body, {
-  //   value: "function myScript(){return 100;}\n",
-  //   mode:  "javascript"
-  // });
+  document.addEventListener('keydown', handleKeyDown, false);
+  document.addEventListener('keyup',   handleKeyUp,   false);
+
+  document.addEventListener('mousedown', handleMouseDown, false);
+  document.addEventListener('mousemove', handleMouseMove, false);
+  document.addEventListener('mouseup',   handleMouseUp,   false);
+
+  // var keyCode = 17; // ctrl key
+  var keyCode = 91; // cmd key
+  var shiftCode = 16;
+  var ctrlDown = false;
+  var shiftDown = false;
+  var mouseDown = false;
+
+  // position cache
+  var pos = {
+    value : null,
+    suffix : null,
+    origin : null,
+    prev : null,
+    step : 4
+  };
+
+  function handleKeyDown(e) {
+    if(e.keyCode == keyCode) ctrlDown = true;
+    if(e.keyCode == shiftCode) shiftDown = true;
+  }
+
+  function handleKeyUp(e) {
+    if(e.keyCode == keyCode) ctrlDown = false;
+    if(e.keyCode == shiftCode) shiftDown = false;
+  }
+
+  function handleMouseDown(e) {
+    mouseDown = ctrlDown && true;
+    if( mouseDown ) {
+      // reset the position cache
+      pos = { value:null, origin:{x:e.pageX, y:e.pageY}, prev:{x:e.pageX, y:e.pageY}, step:pos.step };
+      pos.value = myCodeMirror.getSelection();
+      pos.value = pos.value.match(/^\s*([\d\.\-]+)(.*)$/m);
+      pos.suffix = pos.value[2];
+      pos.value = pos.value[1];
+
+      if(pos.value) {
+        pos.value = parseInt(pos.value);
+      } else {
+        mouseDown = false;
+      }
+
+      e.preventDefault();
+    }
+  }
+  function handleMouseUp(e) { mouseDown = false; }
+  function handleMouseMove(e) {
+    if( !mouseDown ) return;
+    // console.log( myCodeMirror.replaceSelection( nextInteger(myCodeMirror.getSelection()) ) );
+    myCodeMirror.replaceSelection( next(e) );
+
+    e.preventDefault();
+    return false;
+  }
+
+  function next(e) {
+    // console.log(pos.value + (e.pageY - pos.origin.y)/pos.step + pos.suffix);
+    var step = shiftDown ? 0.1 : pos.step;
+    return pos.value + (e.pageX - pos.origin.x)/step + pos.suffix;
+  }
+
+  function nextInteger(val) {
+    console.log(parseInt(val)+1);
+    return parseInt(val)+1;
+  }
+
 </script>
 </html>
