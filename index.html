@@ -1,0 +1,40 @@
+<html>
+<head>
+	<title>11 Things Editor</title>
+
+  <script src="codemirror/codemirror.js"></script>
+  <link rel="stylesheet" href="codemirror/codemirror.css">
+  <script src="codemirror/modes/xml.js"></script>
+  <script src="codemirror/modes/javascript.js"></script>
+  <script src="codemirror/modes/css.js"></script>
+  <script src="codemirror/modes/htmlmixed.js"></script>
+
+  <style type="text/css">
+    .CodeMirror {
+      width:50%;
+      float:left;
+      border:1px solid Red;
+    }
+  </style>
+</head>
+<body>
+
+  <textarea id="editor"></textarea>
+  <div id="output"></div>
+  <iframe id="iout"></iframe>
+
+</body>
+<script type="text/javascript">
+
+  var iout = document.getElementById('iout').contentDocument;
+
+  function handleUpdate(s) { iout.clear(); iout.open(); if(s) iout.write(s.getValue()); iout.close(); }
+
+  var myCodeMirror = CodeMirror.fromTextArea( document.getElementById('editor'), {onUpdate : handleUpdate} );
+
+  // var myCodeMirror = CodeMirror(document.body, {
+  //   value: "function myScript(){return 100;}\n",
+  //   mode:  "javascript"
+  // });
+</script>
+</html>
