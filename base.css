@@ -1,9 +1,45 @@
 body {
-  margin:0;
-  padding:0;
   font-family:sans-serif;
+  background:Black;
 }
 
-.CodeMirror, textarea {
-  /*-webkit-user-select: none;*/
+#book {
+  height:100%;
+  position:relative;
+}
+
+#book .wrapper {
+  background-image: -webkit-linear-gradient(right, rgb(255,255,255) 90%, rgb(219,215,219) 100%);
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:50%;
+  right:0;
+  border-top-left-radius:26px;
+  border-bottom-left-radius:26px;
+  border-left:1px solid Silver;
+}
+
+#book .wrapper+.wrapper {
+  background-image: -webkit-linear-gradient(left, rgb(255,255,255) 90%, rgb(219,215,219) 100%);
+  right:inherit;
+  left:0;
+  border-radius:0;
+  border-top-right-radius:26px;
+  border-bottom-right-radius:26px;
+  border-right:1px solid Silver;
+}
+
+iframe, textarea, .CodeMirror {
+  border:none;
+  height:100%;
+  width:90%
+}
+
+textarea, .CodeMirror {
+  float:right;
+}
+
+.CodeMirror-scroll {
+  height: 100%; overflow: auto;
 }

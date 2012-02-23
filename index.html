@@ -11,19 +11,17 @@
 
   <link rel="stylesheet" type="text/css" href="base.css" />
 
-  <style type="text/css">
-    textarea, .CodeMirror, iframe {
-      width:49.5%;
-      height:99%;
-      float:left;
-      border:1px solid Red;
-    }
-  </style>
 </head>
 <body>
 
-  <iframe id="preview"></iframe>
-  <textarea id="editor"></textarea>
+    <div id="book">
+      <div class="wrapper">
+        <!-- <textarea id="editor"></textarea> -->
+      </div>
+      <div class="wrapper">
+        <iframe id="preview"></iframe>
+      </div>
+    </div>
 
 </body>
 <script type="text/javascript">
@@ -37,7 +35,14 @@
     preview.close();
   }
 
-  var myCodeMirror = CodeMirror.fromTextArea( document.getElementById('editor'), {onUpdate : handleUpdate} );
+  // var myCodeMirror = CodeMirror.fromTextArea( document.getElementById('editor'), {onUpdate : handleUpdate} );
+
+  var myCodeMirror = CodeMirror(document.getElementsByClassName('wrapper')[0], {
+    value: "function myScript(){return 100;}\n",
+    mode:  "htmlmixed",
+    lineNumbers: true,
+    onUpdate: handleUpdate
+  });
 
   document.addEventListener('keydown', handleKeyDown, false);
   document.addEventListener('keyup',   handleKeyUp,   false);
@@ -94,7 +99,7 @@
   function handleMouseUp(e) { mouseDown = false; }
   function handleMouseMove(e) {
     if( !mouseDown ) return;
-    // console.log( myCodeMirror.replaceSelection( nextInteger(myCodeMirror.getSelection()) ) );
+
     myCodeMirror.replaceSelection( next(e) );
 
     e.preventDefault();
@@ -102,7 +107,6 @@
   }
 
   function next(e) {
-    // console.log(pos.value + (e.pageY - pos.origin.y)/pos.step + pos.suffix);
     var step = shiftDown ? 0.1 : pos.step;
     return pos.value + (e.pageX - pos.origin.x)/step + pos.suffix;
   }
