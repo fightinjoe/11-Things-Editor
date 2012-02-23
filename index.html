@@ -35,14 +35,50 @@
     preview.close();
   }
 
-  // var myCodeMirror = CodeMirror.fromTextArea( document.getElementById('editor'), {onUpdate : handleUpdate} );
+  var instructions = "" +
+  "<html><head>\n" +
+  "<style>\n" +
+  "  body {\n" +
+  "    font-family:sans-serif;\n" +
+  "    text-align:center;\n" +
+  "  }\n" +
+  "\n" +
+  "  li {\n" +
+  "    margin-top:0.75em;\n" +
+  "  }\n" +
+  "</style></head><body>\n" +
+  "\n" +
+  "<h1>11 Things Editor</h1>\n" +
+  "\n" +
+  "<p>Type your code on the right, see the live\n" +
+  "   preview on the left!</p>\n" +
+  "\n" +
+  "<h2>Usage</h2>\n" +
+  "\n" +
+  "<ul style=\"width:300px;margin:auto;text-align:left;\">\n" +
+  "  <li>Type in HTML, CSS, or JavaScript</li>\n" +
+  "  <li>Any changes preview immediately</li>\n" +
+  "  <li>To dynamically change any numerical values:\n" +
+  "    <ul>\n" +
+  "      <li>Highlight the numerical value</li>\n" +
+  "      <li>Hold down the CMD key</li>\n" +
+  "      <li>Click and drag on the value to change it</li>\n" +
+  "      <li>Hold down SHIFT as well to change in\n" +
+  "          larger increments</li>\n" +
+  "    </ul>\n" +
+  "  </li>\n" +
+  "</ul>\n" +
+  "</body></html>";
 
   var myCodeMirror = CodeMirror(document.getElementsByClassName('wrapper')[0], {
     value: "function myScript(){return 100;}\n",
     mode:  "htmlmixed",
     lineNumbers: true,
-    onUpdate: handleUpdate
+    onUpdate: handleUpdate,
+    value: instructions
   });
+
+  handleUpdate(myCodeMirror);
 
   document.addEventListener('keydown', handleKeyDown, false);
   document.addEventListener('keyup',   handleKeyUp,   false);
